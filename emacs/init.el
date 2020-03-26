@@ -1,6 +1,10 @@
 ;; init.el --- Emacs configuration file -*- lexical-binding: t -*-
 
-;; ;; Optimization
+;; Optimization
+;; built-in emacs package manager
+(setq package-enable-at-startup nil)
+;(advice-add #'package--ensure-init-file :override #'ignore)
+
 ;; ;;; Garbage collection & File name handler
 ;; (defvar default-file-name-handler-alist file-name-handler-alist)
 ;; (setq gc-cons-threshold most-positive-fixnum
@@ -13,8 +17,8 @@
 ;;           gc-cons-percentage 0.1
 ;;           file-name-handler-alist default-file-name-handler-alist)))
 
-;; ;;; Inhibit resize frame
-;; (setq frame-inhibit-implied-resize t)
+;;; Inhibit resize frame
+(setq frame-inhibit-implied-resize t)
 
 ;; Package management
 ;;; Bootstrap straight.el
