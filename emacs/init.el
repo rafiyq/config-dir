@@ -101,3 +101,145 @@
 (global-set-key (kbd "C-c C-l") #'linum-cycle)
 
 
+;; Built-in packages
+;;; Backup files
+(use-feature files
+  :init
+  (setq auto-save-list-file-name (concat history-dir "autosave")
+        backup-directory-alist '(("." . ,(concat history-dir "backup/")))
+        make-backup-files nil
+        backup-by-copying t
+        create-lockfiles nil
+        auto-save-default nil))
+
+;;; Selection
+(use-feature delsel
+  :init
+  (delete-selection-mode +1))
+
+(use-feature simple
+  :init
+  (setq shift-select-mode nil))
+
+;;; Highlight line
+(use-feature hl-line
+  :hook
+  (prog-mode . hl-line-mode))
+
+;;; Custom edit
+(use-feature cus-edit
+  :init
+  (setq custom-file (concat etc-dir "custom.el")))
+
+;;; Advanced command
+(use-feature novice
+  :init
+  (setq disabled-command-function nil))
+
+;;; Clipboard
+
+
+;;; History
+(use-feature recentf
+  :init
+  (setq recentf-save-file (concat history-dir "recentf")
+        recentf-auto-cleanup 'never)
+  :config
+  (recentf-mode 1))
+
+(use-feature savehist
+  :init
+  (setq savehist-file (concat history-dir "savehist")
+        savehist-save-minibuffer-history t
+        savehist-autosave-interval nil
+        savehist-additional-variables '(kill-ring search-ring regexp-search-ring))
+  (savehist-mode 1))
+
+(use-feature saveplace
+  :init
+  (setq save-place-file (concat history-dir "saveplace"))
+  (save-place-mode 1))
+
+(use-feature desktop
+  :init
+  (setq desktop-dirname (concat etc-dir "desktop")
+        desktop-base-file-name "autosave"
+        desktop-base-lock-name "autosave-lock"))
+
+;;; Icomplete
+(use-feature icomplete
+  :init
+  (setq icomplete-hide-common-prefix nil)
+  (setq icomplete-in-buffer t)
+  :config
+  (icomplete-mode 1))
+
+;;; Dired
+(use-feature dired
+  :config
+  (setq dired-auto-revert-buffer t
+        dired-recursive-copies 'always
+        dired-recursive-deletes 'top
+        dired-listing-switches "-Alh"
+        delete-by-moving-to-trash t
+        dired-dwim-target t)
+  :hook ((dired-mode . dired-hide-details-mode)
+         (dired-mode . hl-line-mode)))
+
+;;; Ibuffer
+(use-feature ibuffer
+  :defer 3
+  :config
+  (setq ibuffer-expert t
+        ibuffer-use-other-window nil
+        ibuffer-show-empty-filter-groups nil
+        ibuffer-saved-filter-groups
+        '(("Main"
+           ("Directories" (mode . dired-mode))
+           ("Org" (mode . org-mode))
+           ("Programming" (mode . prog-mode))
+           ("Markdown" (mode . markdown-mode))
+           ("Magit" (or
+                    (mode . magit-blame-mode)
+                    (mode . magit-cherry-mode)
+                    (mode . magit-diff-mode)
+                    (mode . magit-log-mode)
+                    (mode . magit-process-mode)
+                    (mode . magit-status-mode)))
+           ("Emacs" (or
+                    (name . "^\\*Help\\*$")
+                    (name . "^\\*Custom.*")
+                    (name . "^\\*Org Agenda\\*$")
+                    (name . "^\\*info\\*$")
+                    (name . "^\\*scratch\\*$")
+                    (name . "^\\*Backtrace\\*$")
+                    (name . "^\\*Completions\\*$")
+                    (name . "^\\*straight-process\\*$")
+                    (name . "^\\*Messages\\*$"))))))
+  :hook
+  (ibuffer-mode . hl-line-mode)
+  (ibuffer-mode . (lambda ()
+                    (ibuffer-switch-to-saved-filter-groups "Main")))
+  :bind
+  (([remap list-buffers] . #'ibuffer)))
+
+;;; Hippie expand
+(use-feature hippie-exp
+  :defer 0.5
+  :config
+  (setq hippie-expand-try-functions-list
+        '(
+          try-expand-dabbrev
+          try-expand-dabbrev-all-buffers
+          ;; try-expand-dabbrev-from-kill
+          try-complete-lisp-symbol-partially
+          try-complete-lisp-symbol
+          try-complete-file-name-partially
+          try-complete-file-name
+          ;; try-expand-all-abbrevs
+          ;; try-expand-list
+          ;; try-expand-line
+          ))
+  :bind
+  ("M-/" . hippie-expand))
+  
