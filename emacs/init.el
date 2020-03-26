@@ -246,4 +246,8 @@
           ))
   :bind
   ("M-/" . hippie-expand))
-  
+
+;; External packages
+;;; Ledger
+(use-package ledger-mode
+  :defer 3)
